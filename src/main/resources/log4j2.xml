@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration status="WARN">
+    <Properties>
+        <!-- 应用名称 -->
+        <Property name="APPLICATION_NAME">application</Property>
+        <!-- 日志输出配置 -->
+        <Property name="LOGGING_PATTERN_CONSOLE">%d{yyyy-MM-dd HH:mm:ss.SSS} %-5p --- [%t] %-40.40c{39} : %m%n
+        </Property>
+        <Property name="LOGGING_FILE_PATH">logs</Property>
+        <Property name="LOGGING_FILE_NAME">${APPLICATION_NAME}</Property>
+        <Property name="LOGGING_PATTERN_FILE">%d{yyyy-MM-dd HH:mm:ss.SSS} %-5p --- [%t] %-40.40c{39} : %m%n</Property>
+    </Properties>
+
+    <Appenders>
+        <Console name="Console" target="SYSTEM_OUT" follow="true">
+            <PatternLayout pattern="${LOGGING_PATTERN_CONSOLE}" charset="UTF-8"/>
+        </Console>
+        <RollingFile name="File" fileName="${LOGGING_FILE_PATH}/${LOGGING_FILE_NAME}.log"
+                     filePattern="${LOGGING_FILE_PATH}/${LOGGING_FILE_NAME}-%d{yyyy-MM-dd}.log.gz">
+            <PatternLayout pattern="${LOGGING_PATTERN_FILE}" charset="UTF-8"/>
+            <Filters>
+                <ThresholdFilter level="info"/>
+            </Filters>
+            <Policies>
+                <TimeBasedTriggeringPolicy/>
+            </Policies>
+            <DefaultRolloverStrategy>
+                <Delete basePath="${LOGGING_FILE_PATH}" maxDepth="1">
+                    <IfFileName glob="${LOGGING_FILE_NAME}-*.log.gz"/>
+                    <IfLastModified age="P7D"/>
+                </Delete>
+            </DefaultRolloverStrategy>
+        </RollingFile>
+    </Appenders>
+
+    <Loggers>
+        <Logger name="com.xiaguliuxiang" level="debug"/>
+        <Root level="info">
+            <AppenderRef ref="Console"/>
+            <AppenderRef ref="File"/>
+        </Root>
+    </Loggers>
+</Configuration>
